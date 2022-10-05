@@ -1,0 +1,20 @@
+{% extends 'students/base.html' %} {% block body %}
+<div class="container my-3">
+  <h3>Update Student</h3>
+  {% if success %}
+  <div class="alert alert-dismissible alert-success">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Well done!</strong> You successfully updated Student
+    <a href="{% url 'home' %}" class="alert-link">go to home page</a>.
+  </div>
+  {% else %} {% load crispy_forms_tags %}
+  <form action="" method="POST" class="">
+    {% csrf_token %} {{form| crispy}}
+    <div class="">
+      <button class="btn btn-primary col-4">Update</button>
+      <a href="{% url 'home' %}" class="btn btn-secondary col-4">Cancel</a>
+    </div>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}
