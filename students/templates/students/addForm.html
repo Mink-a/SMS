@@ -11,8 +11,10 @@
   <form action="" method="POST" class="">
     {% csrf_token %} {{form| crispy}}
     <div class="">
-      <button class="btn btn-primary col-4">Add</button>
-      <a href="{% url 'home' %}" class="btn btn-secondary col-4">Cancel</a>
+      <div class="m-auto gap-3 row">
+        <button class="btn btn-primary  col">Add</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary  col">Cancel</a>
+      </div>
     </div>
   </form>
   {% endif %}
