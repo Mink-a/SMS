@@ -1,14 +1,22 @@
-from gettext import install
 from django.shortcuts import redirect, render
 from students.forms import StudentForm
 
 from students.models import Student
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
 
 def index(request):
-    students = Student.objects.all()
+    students_list = Student.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(students_list, 10)
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
     return render(request, 'students/index.html', {'students': students})
 
 
@@ -61,3 +69,12 @@ def delete_student(request, id):
     student = Student.objects.get(id=id)
     student.delete()
     return redirect('home')
+
+
+def search(request):
+    # students_list = Student.objects.all()
+    if request.method == 'POST':
+        search_query = request.POST.get('name')
+        if search_query:
+            results = Student.objects.filter(first_name__contains=search_query)
+            return render(request, 'students/index.html', {"students": results})

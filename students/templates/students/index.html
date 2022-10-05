@@ -1,6 +1,16 @@
 {% extends 'students/base.html' %} {% block body %}
 <div class="container-fluid">
   <h3 class="m-4">All Students</h3>
+  <form action="{% url 'search' %}" method="POST" class="d-flex">
+    {% csrf_token %}
+    <input
+      class="d-inline-block col"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+    />
+    <button class="btn btn-outline-success col d-inline-block" type="submit">Search</button>
+  </form>
   <div class="row">
     <div class="col-12">
       {% if students %}
@@ -72,7 +82,9 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <p>Are you sure to delete student {{ student.id }}?</p>
+                            <p>
+                              Are you sure to delete student {{ student.id }}?
+                            </p>
                           </div>
                           <div class="modal-footer">
                             <a
@@ -148,6 +160,51 @@
           </div>
         </div>
       </div>
+      <!-- Pagination -->
+      <div class="container">
+        <span class="step-links">
+          <ul class="pagination justify-content-center gap-3">
+            {% if students.has_previous %}
+            <li class="page-item border border-info">
+              <a class="page-link bg-transparent" href="?page=1"
+                >&laquo; first</a
+              >
+            </li>
+            <li class="page-item border border-info">
+              <a
+                class="page-link bg-transparent"
+                href="?page={{ students.previous_page_number }}"
+                >previous</a
+              >
+            </li>
+            {% endif %}
+
+            <span
+              class="current d-flex justify-content-center align-items-center"
+            >
+              Page {{ students.number }} of {{ students.paginator.num_pages }}.
+            </span>
+
+            {% if students.has_next %}
+            <li class="page-item border border-info">
+              <a
+                class="page-link bg-transparent"
+                href="?page={{ students.next_page_number }}"
+                >next</a
+              >
+            </li>
+            <li class="page-item border border-info">
+              <a
+                class="page-link bg-transparent"
+                href="?page={{ students.paginator.num_pages }}"
+                >last &raquo;</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </span>
+      </div>
+
       {% else %}
       <h5 class="bg-light p-3 mb-3 mx-4">There is no student record here.</h5>
       {% endif %}
