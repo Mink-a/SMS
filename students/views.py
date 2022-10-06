@@ -1,23 +1,21 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from students.forms import StudentForm
 
 from students.models import Student
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from students.resources import StudentResource
+from students.filters import StudentFilter
+
+from tablib import Dataset
+
 # Create your views here.
 
 
 def index(request):
-    students_list = Student.objects.all()
-    page = request.GET.get('page', 1)
-    paginator = Paginator(students_list, 10)
-    try:
-        students = paginator.page(page)
-    except PageNotAnInteger:
-        students = paginator.page(1)
-    except EmptyPage:
-        students = paginator.page(paginator.num_pages)
-    return render(request, 'students/index.html', {'students': students})
+    f = StudentFilter(request.GET, queryset=Student.objects.all())
+    return render(request, 'students/index.html', {'students': f})
 
 
 def view_student(request, id):
@@ -70,11 +68,27 @@ def delete_student(request, id):
     student.delete()
     return redirect('home')
 
+def export(request):
+    student_resource = StudentResource()
+    f = StudentFilter(request.GET, queryset=Student.objects.all())
+    dataset = student_resource.export(f.qs)
+    response = HttpResponse(
+        dataset.xls, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="Students.xls"'
+    return response
 
-def search(request):
-    # students_list = Student.objects.all()
+def upload(request):
     if request.method == 'POST':
-        search_query = request.POST.get('name')
-        if search_query:
-            results = Student.objects.filter(first_name__contains=search_query)
-            return render(request, 'students/index.html', {"students": results})
+        student_resource = StudentResource()
+        dataset = Dataset()
+        new_persons = request.FILES['myfile']
+
+        imported_data = dataset.load(new_persons.read())
+        result = student_resource.import_data(
+            dataset, dry_run=True)  # Test the data import
+
+        if not result.has_errors():
+            student_resource.import_data(
+                dataset, dry_run=False)  # Actually import now
+
+    return redirect('home')

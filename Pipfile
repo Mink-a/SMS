@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 django = "*"
 crispy-bootstrap5 = "*"
+django-import-export = "*"
+django-filter = "*"
 
 [dev-packages]
 
