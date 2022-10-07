@@ -8,6 +8,7 @@ django = "*"
 crispy-bootstrap5 = "*"
 django-import-export = "*"
 django-filter = "*"
+django-widget-tweaks = "*"
 
 [dev-packages]
 

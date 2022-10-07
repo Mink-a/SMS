@@ -14,11 +14,13 @@ from tablib import Dataset
 
 
 def index(request):
-    # a = Student.objects.all()
-    f = StudentFilter(request.GET, queryset=Student.objects.all())
+    all_students = Student.objects.all()
+    f = StudentFilter(request.GET, queryset=all_students)
+    all_students = f.qs
     page = request.GET.get('page', 1)
+    # print(f'you: {request.GET.items}')
 
-    paginator = Paginator(f.qs, 10)
+    paginator = Paginator(all_students, per_page=10)
     try:
         students = paginator.page(page)
     except PageNotAnInteger:
@@ -26,7 +28,7 @@ def index(request):
     except EmptyPage:
         students = paginator.page(paginator.num_pages)
     print(f'some-> {students}')
-    return render(request, 'students/index.html', {'students': students, 'form': f.form})
+    return render(request, 'students/index.html', {'filter': f, 'students': students})
 
 
 def view_student(request, id):

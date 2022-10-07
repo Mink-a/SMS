@@ -30,8 +30,12 @@
     </div>
   </div>
   <form method="get">
-    {{ form }}
-    <input type="submit" />
+    {% load widget_tweaks %}
+    <div class="form-group row mx-4 gap-1 mb-3">
+      {% render_field filter.form.first_name class="form-control col" placeholder="First Name" type="text" %}
+      {% render_field filter.form.last_name class="form-control col" placeholder="Last Name" type="text" %}
+      <input type="submit" value="Search" class="btn btn-primary col-2"/>
+    </div>
   </form>
   <div class="row">
     <div class="col-12">
@@ -127,7 +131,6 @@
                         </div>
                       </div>
                     </div>
-
                     <!-- Details Modal Section  -->
                     <div
                       class="modal"
@@ -179,13 +182,13 @@
                 {% endfor %}
               </tbody>
             </table>
-            {% comment %} <!--Pagination-->
+            <!--Pagination-->
             <div class="container p-4">
               <div class="pagination justify-content-center">
                 <span class="step-links">
                   {% if students.has_previous %}
-                  <a href="?page=1">&laquo; first</a>
-                  <a href="?page={{ students.previous_page_number }}"
+                  <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1">&laquo; first</a>
+                  <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ students.previous_page_number }}"
                     >previous</a
                   >
                   {% endif %}
@@ -196,42 +199,15 @@
                   </span>
 
                   {% if students.has_next %}
-                  <a href="?page={{ students.next_page_number }}">next</a>
-                  <a href="?page={{ students.paginator.num_pages }}"
+                  <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ students.next_page_number }}">next</a>
+                  <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ students.paginator.num_pages }}"
                     >last &raquo;</a
                   >
                   {% endif %}
                 </span>
               </div>
             </div>
-            <!--end of Pagination--> {% endcomment %}
-            <div>
-              {% if students.has_other_pages %}
-              <ul class="pagination">
-               {% if students.has_previous %}
-                 <li><a href="?page={{ students.previous_page_number }}">&laquo;</a></li>
-               {% else %}
-                <li class="disabled"><span>&laquo;</span></li>
-             {% endif %}
-               {% for i in students.paginator.page_range %}
-                 {% if students.number == i %}
-                   <li class="active"><span>{{ i }} <span class="sr-only">(current)
-                </span></span></li>
-                 {% else %}
-                   <li><a href="?page={{ i }}">{{ i }}</a></li>
-                 {% endif %}
-               {% endfor %}
-               {% if students.has_next %}
-                 <li><a href="?page={{ students.next_page_number }}">&raquo;</a></li>
-               {% else %}
-                 <li class="disabled"><span>&raquo;</span></li>
-               {% endif %}
-             </ul>
-           {% endif %}
-            </div>
-          </div>
-        </div>
-      </div>
+            <!--end of Pagination--> 
       {% else %}
       <h5 class="bg-light p-3 mb-3 mx-4">There is no student record here.</h5>
       {% endif %}
