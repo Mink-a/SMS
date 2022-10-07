@@ -14,8 +14,19 @@ from tablib import Dataset
 
 
 def index(request):
+    # a = Student.objects.all()
     f = StudentFilter(request.GET, queryset=Student.objects.all())
-    return render(request, 'students/index.html', {'students': f})
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(f.qs, 10)
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
+    print(f'some-> {students}')
+    return render(request, 'students/index.html', {'students': students, 'form': f.form})
 
 
 def view_student(request, id):
@@ -68,6 +79,7 @@ def delete_student(request, id):
     student.delete()
     return redirect('home')
 
+
 def export(request):
     student_resource = StudentResource()
     f = StudentFilter(request.GET, queryset=Student.objects.all())
@@ -76,6 +88,7 @@ def export(request):
         dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="Students.xls"'
     return response
+
 
 def upload(request):
     if request.method == 'POST':

@@ -12,5 +12,8 @@ class Student(models.Model):
     field_of_study = models.CharField(max_length=50)
     gpa = models.FloatField(default=0.0)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f'{self.student_number}: {self.first_name} {self.last_name}'
