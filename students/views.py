@@ -27,7 +27,7 @@ def index(request):
         students = paginator.page(1)
     except EmptyPage:
         students = paginator.page(paginator.num_pages)
-    print(f'some-> {students}')
+    # print(f'some-> {students}')
     return render(request, 'students/index.html', {'filter': f, 'students': students})
 
 
