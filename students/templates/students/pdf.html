@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEst</title>
+    <style>
+      * {
+        font-size: 15px;
+      }
+      
+      table {
+        table-layout: fixed;
+        width: 100%;
+        border: 1px solid black;
+      }
+      
+      table th {
+        text-align: left;
+        padding: 3px;
+        padding-bottom: 0;
+      }
+      
+      table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 3px;
+        padding-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Student Number</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Field of Study</th>
+          <th scope="col">GPA</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+          <tr>
+            <td>Sos-{{ student.id }}</td>
+            <td>{{ student.first_name }}</td>
+            <td>{{ student.last_name }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.field_of_study }}</td>
+            <td>{{ student.gpa }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

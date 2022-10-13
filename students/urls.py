@@ -9,4 +9,5 @@ urlpatterns = [
     path('delete/<int:id>', views.delete_student, name='delete_student'),
     path('export', views.export, name='export'),
     path('import', views.upload, name='upload'),
+    path('export-pdf', views.print_to_pdf, name='pdf_export'),
 ]

@@ -9,6 +9,7 @@ crispy-bootstrap5 = "*"
 django-import-export = "*"
 django-filter = "*"
 django-widget-tweaks = "*"
+xhtml2pdf = "*"
 
 [dev-packages]
 

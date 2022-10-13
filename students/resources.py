@@ -4,3 +4,4 @@ from .models import Student
 class StudentResource(resources.ModelResource):
     class Meta:
         model = Student
+        exclude="student_number"

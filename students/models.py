@@ -1,11 +1,12 @@
 from contextlib import nullcontext
+from email.policy import default
 from django.db import models
 
 # Create your models here.
 
 
 class Student(models.Model):
-    student_number = models.PositiveBigIntegerField()
+    student_number = models.PositiveBigIntegerField(default=1)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=100)

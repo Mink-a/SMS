@@ -1,12 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from students.forms import StudentForm
+from django.db.models import Q
 
 from students.models import Student
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from students.resources import StudentResource
 from students.filters import StudentFilter
+from students.utils import render_to_pdf
 
 from tablib import Dataset
 
@@ -40,7 +42,7 @@ def add(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
         if form.is_valid():
-            new_student_number = form.cleaned_data['student_number']
+            # new_student_number = form.cleaned_data['student_number']
             new_student_first_name = form.cleaned_data['first_name']
             new_student_last_name = form.cleaned_data['last_name']
             new_student_email = form.cleaned_data['email']
@@ -48,7 +50,7 @@ def add(request):
             new_student_gpa = form.cleaned_data['gpa']
 
             new_student = Student(
-                student_number=new_student_number,
+                # student_number=new_student_number,
                 first_name=new_student_first_name,
                 last_name=new_student_last_name,
                 email=new_student_email,
@@ -107,3 +109,18 @@ def upload(request):
                 dataset, dry_run=False)  # Actually import now
 
     return redirect('home')
+
+
+def print_to_pdf(req):
+    template_name = "students/pdf.html"
+    students = Student.objects.all()
+    print(req.GET)
+    if req.GET:
+        students = Student.objects.filter(Q(first_name__istartswith=req.GET['first_name']) & Q(
+            last_name__istartswith=req.GET['last_name']))
+    return render_to_pdf(
+        template_name,
+        {
+            "students": students,
+        },
+    )
