@@ -116,8 +116,12 @@ def print_to_pdf(req):
     students = Student.objects.all()
     print(req.GET)
     if req.GET:
-        students = Student.objects.filter(Q(first_name__istartswith=req.GET['first_name']) & Q(
-            last_name__istartswith=req.GET['last_name']))
+        if len(req.GET) > 1:
+            students = Student.objects.filter(Q(first_name__istartswith=req.GET['first_name']) & Q(
+                last_name__istartswith=req.GET['last_name']))
+        else:
+            students = Student.objects.all()
+            
     return render_to_pdf(
         template_name,
         {

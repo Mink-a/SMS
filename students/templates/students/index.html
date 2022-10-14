@@ -2,7 +2,7 @@
 <div class="container-fluid">
   <div class="m-4 row align-items-center">
     <h3 class="col p-0">All Students</h3>
-    <div class="col-3 mx-1">
+    <div class="col-2 mx-1">
       <form
         method="post"
         enctype="multipart/form-data"
@@ -16,23 +16,23 @@
           >
           <input id="inputTag" class="d-none" type="file" name="myfile" />
         </label>
-        <button type="submit" class="btn btn-success col" id="upload" disabled>
-          Upload
+        <button type="submit" class="d-flex btn btn-success justify-content-center align-items-center gap-2 col-6" id="upload" disabled>
+          <i class="fa-sharp fa-solid fa-table"></i><span>upload</span>
         </button>
       </form>
     </div>
     <div class="col-1 p-0 pe-1">
       <a
-        class="d-block btn btn-primary"
+        class="d-flex btn btn-primary justify-content-center align-items-center gap-2"
         href="{% url 'export' %}?{{request.GET.urlencode}}"
-        >export</a
+        ><i class="fa-sharp fa-solid fa-table"></i><span>excel</span></a
       >
     </div>
     <div class="col-1 p-0">
       <a
-        class="d-block btn btn-primary"
+        class="d-flex btn btn-primary justify-content-center align-items-center gap-2"
         href="{% url 'pdf_export' %}?{{request.GET.urlencode}}"
-        >export</a
+        ><span><i class="fa-sharp fa-solid fa-file"></i></span><span>pdf</span></a
       >
     </div>
   </div>
@@ -271,7 +271,7 @@
           if (inputFile.files.length > 0) {
             document.querySelector("#upload").disabled = false;
           }
-          fileName.innerText = inputFile.files[0].name;
+          fileName.innerText = (inputFile.files[0].name).substring(0,8);
           fileName.classList.add(["text-primary"]);
         });
       </script>
