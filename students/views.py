@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from students.forms import StudentForm
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from students.models import Student
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -14,7 +15,7 @@ from tablib import Dataset
 
 # Create your views here.
 
-
+@login_required(login_url='login')
 def index(request):
     all_students = Student.objects.all()
     f = StudentFilter(request.GET, queryset=all_students)
@@ -37,7 +38,7 @@ def view_student(request, id):
     student = Student.objects.get(id=id)
     return redirect('home', {'student': student})
 
-
+@login_required(login_url='login')
 def add(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -65,6 +66,7 @@ def add(request):
         return render(request, 'students/addForm.html', {'form': form})
 
 
+@login_required(login_url='login')
 def update(request, id):
     if request.method == 'POST':
         student = Student.objects.get(id=id)
@@ -78,12 +80,14 @@ def update(request, id):
         return render(request, 'students/updateForm.html', {'form': form})
 
 
+@login_required(login_url='login')
 def delete_student(request, id):
     student = Student.objects.get(id=id)
     student.delete()
     return redirect('home')
 
 
+@login_required(login_url='login')
 def export(request):
     student_resource = StudentResource()
     f = StudentFilter(request.GET, queryset=Student.objects.all())
@@ -94,6 +98,7 @@ def export(request):
     return response
 
 
+@login_required(login_url='login')
 def upload(request):
     if request.method == 'POST':
         student_resource = StudentResource()
@@ -111,6 +116,7 @@ def upload(request):
     return redirect('home')
 
 
+@login_required(login_url='login')
 def print_to_pdf(req):
     template_name = "students/pdf.html"
     students = Student.objects.all()
